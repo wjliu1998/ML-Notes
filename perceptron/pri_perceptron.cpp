@@ -1,6 +1,10 @@
 #include "pri_perceptron.h"
 #include <iostream>
+#include <cstring>
+#include <fstream>
+#include <sstream>
 
+using namespace std;
 using std::cout;
 using std::endl;
 
@@ -41,13 +45,34 @@ Pri_perceptron::adjust(double *x, int y){
   }
 }
 int main(){
+  int num = 80;
   double w[2] = {0.0, 0.0};
   Pri_perceptron perceptron = Pri_perceptron(1.0, w, 0.0);
-  double x[3][2] = {{3,3}, {4,3}, {1,1}};
-  double y[3] = {1, 1, -1};
+  
+  double x[80][2];
+  double y[80];
+  
+  ifstream xStream;
+  xStream.open("ex4x.dat", ios::in);
+  ifstream yStream;
+  yStream.open("ex4y.dat", ios::in);
+  string xtemp, xtemp2, ytemp, ytemp2;
+  int i = 0;
+  while(getline(xStream, xtemp) && getline(yStream, ytemp)){
+    istringstream xBand(xtemp);
+    istringstream yBand(ytemp);
+    for(int j = 0; j < 2; j++){
+      xBand >> xtemp2;
+      x[i][j] = atof(xtemp2.data());
+    }
+    yBand >> ytemp2;
+    y[i] = (atof(ytemp2.data()) ? 1.0 : -1.0);
+    i++;
+  }
+
   bool judge = false;
   while(1){
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < num; i++){
       if(perceptron.adjust(x[i], y[i]) == true){
          judge = true;
          perceptron.getAnswer();
