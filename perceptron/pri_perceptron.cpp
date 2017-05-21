@@ -3,6 +3,7 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 using std::cout;
@@ -44,17 +45,12 @@ Pri_perceptron::adjust(double *x, int y){
     return false;
   }
 }
-int main(){
-  int num = 80;
-  double w[2] = {0.0, 0.0};
-  Pri_perceptron perceptron = Pri_perceptron(1.0, w, 0.0);
-  
-  double x[80][2];
-  double y[80];
-  
-  ifstream xStream;
+
+void
+readFile(double (*x)[3], double* y, string filename){
+  /*ifstream xStream;
   xStream.open("ex4x.dat", ios::in);
-  ifstream yStream;
+  ifstream yStream; 
   yStream.open("ex4y.dat", ios::in);
   string xtemp, xtemp2, ytemp, ytemp2;
   int i = 0;
@@ -68,9 +64,41 @@ int main(){
     yBand >> ytemp2;
     y[i] = (atof(ytemp2.data()) ? 1.0 : -1.0);
     i++;
-  }
+  }*/
+  ifstream fileStream;
+  fileStream.open(filename, ios::in);
+  string temp,temp2;
+  int count = 0;
 
-  bool judge = false;
+  while(getline(fileStream,temp)){
+    cout << (string)temp << endl;
+    //istringstream xBand(temp);
+    const char* c = ",";
+    char* temp3 = strtok(temp, c);
+    /*for(int i = 0; i <= 3; i++){
+      xBand >> temp2;
+      if(i <= 2) x[count][i] = atof(temp2.data());
+      else       y[count] = atof(temp2.data());
+    }*/
+    /*x[0] = atof(temp3[0]);
+    x[1] = atof(temp3[1]);
+    x[2] = atof(temp3[2]);
+    y[0] = atof(temp3[3]);*/
+
+    count++;
+  }
+}
+int main(){
+  int num = 80;
+  double w[2] = {0.0, 0.0};
+  Pri_perceptron perceptron = Pri_perceptron(1.0, w, 0.0);
+  
+  static double inputx[259][3];
+  static double inputy[259];
+  
+  readFile(inputx, inputy, "dataset");
+
+  /*bool judge = false;
   while(1){
     for(int i = 0; i < num; i++){
       if(perceptron.adjust(x[i], y[i]) == true){
@@ -83,5 +111,10 @@ int main(){
     else break;
   }
   perceptron.getAnswer();
-  return 0;
+  return 0;*/
+
+  /*for(int i = 0; i < 259; i++){
+    cout << inputx[i][0] << " " << inputx[i][1] << " " << inputx[i][2] << 
+      " " << inputy[i] << endl;
+  }*/
 }
